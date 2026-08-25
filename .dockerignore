@@ -1,0 +1,14 @@
+.git
+out/
+uploads/
+.venv
+venv
+__pycache__
+*.pyc
+.pytest_cache
+godot_test/.godot
+*.FCStd
+*.stp
+*.STEP
+*.step
+.DS_Store

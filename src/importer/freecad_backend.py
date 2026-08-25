@@ -26,13 +26,25 @@ _FC_ERROR = ""
 
 
 def _try_add_freecad_paths() -> None:
+    home = Path.home()
     candidates = [
+        # macOS (FreeCAD.app bundle)
         Path("/Applications/FreeCAD.app/Contents/Resources/lib"),
         Path("/Applications/FreeCAD.app/Contents/Resources/lib/python3.11/site-packages"),
-        Path.home() / "Applications/FreeCAD.app/Contents/Resources/lib",
+        home / "Applications/FreeCAD.app/Contents/Resources/lib",
+        # Linux (apt/distro packages)
         Path("/usr/lib/freecad/lib"),
         Path("/usr/lib/freecad-python3/lib"),
         Path("/usr/local/lib/freecad/lib"),
+        # Linux/macOS (conda-forge — see Dockerfile; also common for manual installs)
+        Path("/opt/conda/envs/fc/lib"),
+        home / "miniforge3/envs/fc/lib",
+        home / "miniconda3/envs/fc/lib",
+        home / "anaconda3/envs/fc/lib",
+        # Windows (official installer; version dir varies by release)
+        Path("C:/Program Files/FreeCAD 1.0/bin"),
+        Path("C:/Program Files/FreeCAD 0.21/bin"),
+        Path("C:/Program Files/FreeCAD 0.20/bin"),
     ]
     for p in candidates:
         if p.is_dir() and str(p) not in sys.path:

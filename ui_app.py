@@ -385,7 +385,7 @@ def _ensure_viewer_server() -> None:
     if _viewer_proc and _viewer_proc.poll() is None:
         return
     _viewer_proc = subprocess.Popen(
-        [sys_executable(), "-m", "http.server", str(VIEWER_PORT)],
+        [sys_executable(), "-m", "http.server", "--bind", "0.0.0.0", str(VIEWER_PORT)],
         cwd=str(VIEWER_DIR),
         stdout=subprocess.DEVNULL,
         stderr=subprocess.DEVNULL,
@@ -778,7 +778,8 @@ def main() -> None:
     UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
     OUT_ROOT.mkdir(parents=True, exist_ok=True)
     _ensure_viewer_server()
-    server = ThreadingHTTPServer(("127.0.0.1", PORT), Handler)
+    bind_host = os.environ.get("UI_BIND", "127.0.0.1")
+    server = ThreadingHTTPServer((bind_host, PORT), Handler)
     print(f"CAD Robot Test UI → http://127.0.0.1:{PORT}/")
     print(f"3D Viewer         → http://127.0.0.1:{VIEWER_PORT}/")
     print("Ctrl+C to stop")
